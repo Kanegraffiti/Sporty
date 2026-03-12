@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
 
 const listingCards = [
-  { id: 1, section: 'Section 115', row: 'Row 11, 10-15', price: '$150', badge: '1 0 Amazing', image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80' },
-  { id: 2, section: 'Section 107', row: 'Row 5, 20-25', price: '$171', badge: '9 4 Amazing', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80' },
-  { id: 3, section: 'Section 135', row: 'Row 10, 1-5', price: '$121', badge: '1 0 Amazing', image: 'https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?auto=format&fit=crop&w=800&q=80' },
-  { id: 4, section: 'Section 97', row: 'Row 2, 11-15', price: '$245', badge: '1 0 Amazing', image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80' },
-  { id: 5, section: 'Section 155', row: 'Row 35, 1-5', price: '$97', badge: '8 2 Amazing', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80' }
+  { id: 1, section: 'Section 115', row: 'Row 11, 10-15', price: '$150', score: '1 0', badge: 'Amazing', image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80' },
+  { id: 2, section: 'Section 107', row: 'Row 5, 20-25', price: '$171', score: '9 4', badge: 'Amazing', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80' },
+  { id: 3, section: 'Section 135', row: 'Row 10, 1-5', price: '$121', score: '1 0', badge: 'Amazing', image: 'https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?auto=format&fit=crop&w=800&q=80' },
+  { id: 4, section: 'Section 97', row: 'Row 2, 11-15', price: '$245', score: '1 0', badge: 'Amazing', image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80' },
+  { id: 5, section: 'Section 155', row: 'Row 35, 1-5', price: '$97', score: '8 2', badge: 'Amazing', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80' }
 ];
 
 const selectOptions = {
@@ -116,7 +116,7 @@ function ListScreen({ onNavigate }) {
             <div>
               <h3>{card.section}</h3>
               <p>{card.row} ↺</p>
-              <span>{card.badge}</span>
+              <span><b>{card.score}</b> {card.badge}</span>
             </div>
             <div className="price-col">
               <strong>{card.price}</strong>
