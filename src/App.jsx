@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
 const listingCards = [
   { id: 1, section: 'Section 115', row: 'Row 11, 10-15', price: '$150', score: '1 0', badge: 'Amazing', image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80' },
@@ -27,12 +27,15 @@ function App() {
   const [screen, setScreen] = useState('list');
   const [filters, setFilters] = useState({ quantity: '2 tickets', seats: '1,2', merch: 'None', refresh: 'None', loyalty: true });
 
-  const placeholderTitles = useMemo(
-    () => ({
-      calendar: 'Calendar',
-      search: 'Search',
-      profile: 'Profile',
-      settings: 'Settings',
+  const renderPrimaryScreen = () => {
+    if (screen === 'list') return <ListScreen onNavigate={setScreen} />;
+    if (screen === 'ticket') return <TicketScreen onNavigate={setScreen} filters={filters} setFilters={setFilters} />;
+    if (screen === 'detail') return <DetailScreen onNavigate={setScreen} />;
+    if (screen === 'calendar') return <CalendarScreen onNavigate={setScreen} />;
+    if (screen === 'search') return <SearchScreen onNavigate={setScreen} />;
+    if (screen === 'profile') return <ProfileScreen onNavigate={setScreen} />;
+    if (screen === 'settings') return <SettingsScreen onNavigate={setScreen} />;
+    const placeholderTitles = {
       share: 'Share Listing',
       cart: 'Cart',
       favorites: 'Favorites',
@@ -41,14 +44,8 @@ function App() {
       sort: 'Sort Listings',
       info: 'Event Details',
       price: 'Price Breakdown'
-    }),
-    []
-  );
+    };
 
-  const renderPrimaryScreen = () => {
-    if (screen === 'list') return <ListScreen onNavigate={setScreen} />;
-    if (screen === 'ticket') return <TicketScreen onNavigate={setScreen} filters={filters} setFilters={setFilters} />;
-    if (screen === 'detail') return <DetailScreen onNavigate={setScreen} />;
     if (placeholderTitles[screen]) {
       return <SimpleScreen title={placeholderTitles[screen]} onBack={() => setScreen('list')} />;
     }
@@ -222,6 +219,140 @@ function DetailScreen({ onNavigate }) {
       </div>
       <button className="cta" onClick={() => onNavigate('checkout')}>Proceed to checkout</button>
       <button className="cta cta-gold" onClick={() => onNavigate('cart')}>Add to cart 🛒</button>
+    </section>
+  );
+}
+
+function CalendarScreen({ onNavigate }) {
+  const events = [
+    { date: 'Mar 26', title: 'Utah Jazz @ Knicks', venue: 'MSG · 9:30 PM', status: 'Booked' },
+    { date: 'Apr 2', title: 'Nets @ Knicks', venue: 'MSG · 8:00 PM', status: 'Available' },
+    { date: 'Apr 9', title: 'Bulls @ Knicks', venue: 'MSG · 7:30 PM', status: 'Watchlist' }
+  ];
+
+  return (
+    <section className="screen">
+      <div className="icon-row">
+        <button className="circle-btn" onClick={() => onNavigate('list')}>←</button>
+        <button className="circle-btn" onClick={() => onNavigate('search')}>⌕</button>
+      </div>
+      <article className="panel-card">
+        <h2>Game Calendar</h2>
+        <p>Plan your next game night and quickly jump back to the best listings.</p>
+      </article>
+      <div className="calendar-grid">
+        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+          <span key={day}>{day}</span>
+        ))}
+        {[...Array(35)].map((_, idx) => {
+          const day = idx - 3;
+          const isActive = [10, 17, 24].includes(day);
+          return (
+            <button key={idx} className={`calendar-day ${isActive ? 'active' : ''}`}>
+              {day > 0 && day < 32 ? day : ''}
+            </button>
+          );
+        })}
+      </div>
+      <div className="stack-list">
+        {events.map((event) => (
+          <article key={event.title} className="panel-card event-card">
+            <div>
+              <strong>{event.date}</strong>
+              <h3>{event.title}</h3>
+              <p>{event.venue}</p>
+            </div>
+            <span>{event.status}</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SearchScreen({ onNavigate }) {
+  const trending = ['Knicks vs Celtics', 'Courtside', 'Family section', 'Weekend games'];
+
+  return (
+    <section className="screen">
+      <div className="icon-row">
+        <button className="circle-btn" onClick={() => onNavigate('list')}>←</button>
+      </div>
+      <article className="panel-card">
+        <h2>Search Listings</h2>
+        <div className="search-box">⌕ Search by team, venue, section, or date...</div>
+        <div className="chip-row">
+          {trending.map((item) => (
+            <button key={item} className="chip">{item}</button>
+          ))}
+        </div>
+      </article>
+      <div className="stack-list">
+        {listingCards.slice(0, 3).map((card) => (
+          <button key={card.id} className="panel-card quick-result" onClick={() => onNavigate('ticket')}>
+            <img src={card.image} alt={card.section} />
+            <div>
+              <h3>{card.section}</h3>
+              <p>{card.row}</p>
+              <small>{card.price} incl. fees</small>
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProfileScreen({ onNavigate }) {
+  return (
+    <section className="screen">
+      <div className="icon-row">
+        <button className="circle-btn" onClick={() => onNavigate('list')}>←</button>
+      </div>
+      <article className="panel-card profile-head">
+        <div className="avatar">JD</div>
+        <div>
+          <h2>Jordan Davis</h2>
+          <p>Season Pass Member · Tier Gold</p>
+        </div>
+      </article>
+      <div className="stack-list">
+        <article className="panel-card"><strong>Upcoming tickets</strong><p>2 active bookings for March and April.</p></article>
+        <article className="panel-card"><strong>Favorite teams</strong><p>Knicks, Lakers, Warriors.</p></article>
+        <article className="panel-card"><strong>Payment methods</strong><p>Visa ending in 3445 · Apple Pay connected.</p></article>
+      </div>
+      <button className="cta" onClick={() => onNavigate('settings')}>Manage account</button>
+    </section>
+  );
+}
+
+function SettingsScreen({ onNavigate }) {
+  const rows = [
+    'Notifications',
+    'Ticket delivery preferences',
+    'Privacy & security',
+    'Connected wallets',
+    'Help & support'
+  ];
+
+  return (
+    <section className="screen">
+      <div className="icon-row">
+        <button className="circle-btn" onClick={() => onNavigate('profile')}>←</button>
+      </div>
+      <article className="panel-card">
+        <h2>Settings</h2>
+        <p>Personalize your Sporty experience and keep your account secure.</p>
+      </article>
+      <div className="stack-list">
+        {rows.map((row) => (
+          <button key={row} className="field-row settings-row">
+            <span>{row}</span>
+            <span>›</span>
+          </button>
+        ))}
+      </div>
+      <button className="cta cta-gold" onClick={() => onNavigate('list')}>Save preferences</button>
     </section>
   );
 }
