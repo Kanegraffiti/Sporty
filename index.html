@@ -10,12 +10,10 @@
       --bg-top: #10cbb8;
       --bg-bottom: #d8e9ea;
       --card: #13d1c2;
-      --muted-card: #e6e6e6;
       --line: rgba(0,0,0,0.2);
       --ink: #111;
       --yellow: #e3bf10;
       --green: #12ff00;
-      --white: #fff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -26,125 +24,78 @@
       display: flex;
       justify-content: center;
     }
-    .phone {
-      width: min(430px, 100vw);
-      min-height: 100vh;
-      padding: 10px 10px 0;
-      position: relative;
-    }
-    .status {
-      display: flex; justify-content: space-between; align-items: center;
-      font-weight: 700; font-size: 24px; padding: 8px 10px 14px;
-    }
+    button { font: inherit; color: inherit; }
+    .phone { width: min(430px, 100vw); min-height: 100vh; padding: 10px 10px 0; position: relative; }
+    .status { display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:24px; padding:8px 10px 14px; }
     .status small { font-size: 15px; }
     .screen { display: none; padding-bottom: 108px; }
     .screen.active { display: block; }
 
-    .top-icons { display: flex; justify-content: space-between; margin: 4px 2px 12px; }
-    .icon-btn {
-      width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid #4f4718;
-      background: var(--yellow); display: grid; place-items: center; font-size: 27px;
-      box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    .pill-header { border:1.5px solid #111; border-radius:20px; background:#fff; display:flex; align-items:center; gap:10px; padding:6px 12px; margin-bottom:10px; }
+    .pill-header .title { font-size: 16px; font-weight:700; line-height:1.2; }
+
+    .meta-pill { margin:5px auto; width: fit-content; border:1.5px solid #444; border-radius:20px; padding:5px 14px; background:rgba(255,255,255,.66); font-size:14px; }
+    .chip-row { display:flex; gap:8px; margin:12px 0; overflow-x:auto; }
+    .chip {
+      flex:none; border-radius:22px; border:1px solid #444; background:#d7d7d7; padding:9px 14px; font-size:14px;
+      cursor:pointer;
     }
-    .icon-cluster { display: flex; gap: 10px; }
 
-    .hero-image { width: 100%; border-radius: 16px; border: 1px solid #202020; box-shadow: 0 2px 7px rgba(0,0,0,.35); }
+    .hero-image { width:100%; border-radius:16px; border:1px solid #202020; box-shadow:0 2px 7px rgba(0,0,0,.35); }
+    .listing-wrap { margin-top:14px; background:#d8d8d8; border-radius:10px; padding:14px 10px; }
+    .list-head { display:flex; justify-content:space-between; align-items:center; font-size:30px; font-weight:700; margin-bottom:8px; }
+    .sort-btn { border:none; background:transparent; cursor:pointer; font-size:14px; }
 
-    .pill-header {
-      border: 1.5px solid #111; border-radius: 20px; background: white;
-      display: flex; align-items: center; gap: 10px; padding: 6px 12px; margin-bottom: 10px;
-    }
-    .pill-header .title { font-size: 42px; font-weight: 700; line-height: 1.1; }
-
-    .meta-pill {
-      margin: 5px auto; width: fit-content; border: 1.5px solid #444;
-      border-radius: 20px; padding: 5px 14px; background: rgba(255,255,255,.66); font-size: 34px;
-    }
-    .chip-row { display: flex; gap: 8px; margin: 12px 0; overflow-x: auto; }
-    .chip { flex: none; border-radius: 22px; border: 1px solid #444; background: #d7d7d7; padding: 9px 14px; font-size: 30px; }
-
-    .listing-wrap { margin-top: 14px; background: #d8d8d8; border-radius: 10px; padding: 14px 10px; }
-    .list-head { display: flex; justify-content: space-between; font-size: 45px; font-weight: 700; margin-bottom: 8px; }
     .ticket-card {
-      background: var(--card); border-radius: 26px; border: 1.5px solid #333; padding: 10px;
-      display: grid; grid-template-columns: 38% 1fr auto; gap: 10px; align-items: center;
-      margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,.25); cursor: pointer;
+      width:100%; text-align:left; background:var(--card); border-radius:26px; border:1.5px solid #333; padding:10px;
+      display:grid; grid-template-columns:38% 1fr auto; gap:10px; align-items:center; margin-bottom:10px;
+      box-shadow:0 2px 5px rgba(0,0,0,.25); cursor:pointer;
     }
-    .thumb { width: 100%; aspect-ratio: 1.55; object-fit: cover; border-radius: 14px; border: 1px solid #333; }
-    .ticket-card h4 { font-size: 43px; line-height: 1; }
-    .ticket-card p { font-size: 34px; color: rgba(0,0,0,.72); }
-    .badge { margin-top: 7px; width: fit-content; background: #e6e6e6; border-radius: 15px; padding: 3px 10px; font-size: 34px; }
-    .price { text-align: right; font-weight: 800; font-size: 47px; line-height: 1; }
-    .price small { display: block; font-size: 34px; font-weight: 500; margin-top: 6px; }
+    .thumb { width:100%; aspect-ratio:1.55; object-fit:cover; border-radius:14px; border:1px solid #333; }
+    .ticket-card h4 { font-size:24px; line-height:1.1; }
+    .ticket-card p { font-size:16px; color:rgba(0,0,0,.72); }
+    .badge { margin-top:7px; width:fit-content; background:#e6e6e6; border-radius:15px; padding:3px 10px; font-size:14px; }
+    .price { text-align:right; font-weight:800; font-size:32px; line-height:1; }
+    .price small { display:block; font-size:14px; font-weight:500; margin-top:6px; }
 
-    .cta {
-      width: 60%; margin: 15px auto 0; border-radius: 30px; border: 1.5px solid #333;
-      background: var(--green); padding: 12px; font-size: 40px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,.25);
-    }
+    .cta { width:60%; margin:15px auto 0; border-radius:30px; border:1.5px solid #333; background:var(--green); padding:12px; font-size:18px; text-align:center; box-shadow:0 2px 4px rgba(0,0,0,.25); cursor:pointer; }
+    .add-cart { background:#d4ad0e; }
 
-    .gallery {
-      margin-top: 4px; display: grid; grid-template-columns: 58% 42%; gap: 3px;
-      border-radius: 7px; overflow: hidden; border: 1px solid #222;
-    }
-    .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .gallery-side { display: grid; grid-template-rows: 1fr 1fr; gap: 3px; }
-    .view-all { position: absolute; right: 10px; bottom: 9px; background: rgba(227,191,16,.95); border: 1px solid #222; border-radius: 4px; padding: 5px 9px; font-size: 17px; }
-    .relative { position: relative; }
+    .top-icons { display:flex; justify-content:space-between; margin:4px 2px 12px; }
+    .icon-btn { width:50px; height:50px; border-radius:50%; border:1.5px solid #4f4718; background:var(--yellow); display:grid; place-items:center; font-size:27px; box-shadow:0 2px 5px rgba(0,0,0,.35); cursor:pointer; }
+    .icon-cluster { display:flex; gap:10px; }
 
-    .title-block { padding: 11px 10px 8px; }
-    .title-block h2 { font-size: 47px; margin-bottom: 2px; }
-    .title-block .cost { font-size: 48px; font-weight: 800; }
-    .title-block .sub { font-size: 33px; color: rgba(0,0,0,.6); margin: 6px 0 8px; }
-    .line { border-top: 1px solid var(--line); margin: 10px 0; }
-    .marketplace { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size: 54px; }
-    .marketplace .logo { font-size: 76px; color:#1f57a8; font-weight: 800; }
+    .gallery { margin-top:4px; display:grid; grid-template-columns:58% 42%; gap:3px; border-radius:7px; overflow:hidden; border:1px solid #222; }
+    .gallery img { width:100%; height:100%; object-fit:cover; display:block; }
+    .gallery-side { display:grid; grid-template-rows:1fr 1fr; gap:3px; }
+    .relative { position:relative; }
+    .view-all { position:absolute; right:10px; bottom:9px; background:rgba(227,191,16,.95); border:1px solid #222; border-radius:4px; padding:5px 9px; font-size:17px; cursor:pointer; }
 
-    .field {
-      margin: 12px 16px; background: #f4f4f4; border-radius: 23px; border: 1px solid #333;
-      padding: 15px 18px; display: flex; justify-content: space-between; align-items: center; font-size: 45px;
-      box-shadow: 0 2px 4px rgba(0,0,0,.2);
-    }
-    .field .right { border: 1px solid #444; border-radius: 22px; padding: 4px 14px; background: #ececec; font-size: 36px; }
+    .title-block { padding:11px 10px 8px; }
+    .title-block h2 { font-size:17px; margin-bottom:2px; }
+    .title-block .cost { font-size:18px; font-weight:800; }
+    .title-block .sub { font-size:13px; color:rgba(0,0,0,.6); margin:6px 0 8px; }
+    .line { border-top:1px solid var(--line); margin:10px 0; }
+    .marketplace { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:15px; }
+    .marketplace .logo { font-size:29px; color:#1f57a8; font-weight:800; }
 
-    .section-title { font-size: 52px; margin: 14px 10px 4px; font-weight: 700; }
-    .copy { font-size: 40px; margin: 0 10px 10px; }
-    .pay-cards { display:flex; gap:8px; margin: 8px 0 14px; }
-    .pay-card { flex:1; border:1px solid #333; border-radius: 16px; background:#e7e7e7; padding: 10px; font-size: 40px; }
-    .add-cart { background: #d4ad0e; }
+    .field { width: calc(100% - 32px); margin:12px 16px; background:#f4f4f4; border-radius:23px; border:1px solid #333; padding:15px 18px; display:flex; justify-content:space-between; align-items:center; font-size:18px; box-shadow:0 2px 4px rgba(0,0,0,.2); cursor:pointer; }
+    .field .right { border:1px solid #444; border-radius:22px; padding:4px 14px; background:#ececec; font-size:14px; }
 
-    .bottom-nav {
-      position: fixed; left: 50%; transform: translateX(-50%); bottom: 0;
-      width: min(430px, 100vw); padding: 10px;
-    }
-    .nav-shell {
-      border-radius: 19px; border: 1.5px solid #333; padding: 10px 16px 14px;
-      background: linear-gradient(to right, #16cbb8, #e8ecec); box-shadow: 0 -2px 5px rgba(0,0,0,.2);
-    }
-    .nav-items { display: flex; justify-content: space-between; }
-    .nav-item { width: 44px; height: 44px; border-radius: 50%; background: #f0f0f0; display:grid; place-items:center; font-size: 24px; border:1px solid #d0d0d0; }
-    .home-indicator { width: 120px; height: 5px; border-radius: 999px; background: #080808; margin: 12px auto 2px; }
+    .section-title { font-size:16px; margin:14px 10px 4px; font-weight:700; }
+    .copy { font-size:14px; margin:0 10px 10px; }
+    .pay-cards { display:flex; gap:8px; margin:8px 0 14px; }
+    .pay-card { flex:1; border:1px solid #333; border-radius:16px; background:#e7e7e7; padding:10px; font-size:14px; cursor:pointer; }
 
-    @media (max-width: 430px) {
-      .status { font-size: 20px; }
-      .pill-header .title { font-size: 13px; }
-      .meta-pill,.chip { font-size: 32px; }
-      .list-head { font-size: 17px; }
-      .ticket-card h4 { font-size: 17px; }
-      .ticket-card p,.badge,.price small { font-size: 13px; }
-      .price { font-size: 18px; }
-      .cta { font-size: 34px; }
-      .title-block h2 { font-size: 17px; }
-      .title-block .cost { font-size: 18px; }
-      .title-block .sub { font-size: 13px; }
-      .marketplace { font-size: 15px; }
-      .marketplace .logo { font-size: 29px; }
-      .field { font-size: 12px; }
-      .field .right { font-size: 12px; }
-      .section-title { font-size: 16px; }
-      .copy { font-size: 11px; }
-      .pay-card { font-size: 12px; }
-      .cta { font-size: 12px; padding: 10px; }
-    }
+    .simple-screen { padding: 8px 8px 120px; }
+    .simple-card { margin-top: 14px; background: rgba(255,255,255,.7); border: 1px solid #333; border-radius: 16px; padding: 14px; }
+    .simple-card p { margin-top: 8px; font-size: 14px; }
+
+    .bottom-nav { position:fixed; left:50%; transform:translateX(-50%); bottom:0; width:min(430px,100vw); padding:10px; }
+    .nav-shell { border-radius:19px; border:1.5px solid #333; padding:10px 16px 14px; background:linear-gradient(to right, #16cbb8, #e8ecec); box-shadow:0 -2px 5px rgba(0,0,0,.2); }
+    .nav-items { display:flex; justify-content:space-between; }
+    .nav-item { width:44px; height:44px; border-radius:50%; background:#f0f0f0; display:grid; place-items:center; font-size:24px; border:1px solid #d0d0d0; cursor:pointer; }
+    .home-indicator { width:120px; height:5px; border-radius:999px; background:#080808; margin:12px auto 2px; }
   </style>
 </head>
 <body>
@@ -152,32 +103,44 @@
     <div class="status"><span>8:41</span><small>◔ ◔ ▱</small></div>
 
     <section class="screen active" id="screen-list">
-      <div class="pill-header"><span>←</span><div class="title">New York Knicks at Utah Jazz</div><span>ⓘ</span></div>
+      <div class="pill-header">
+        <button class="chip" data-target="screen-profile">←</button>
+        <div class="title">New York Knicks at Utah Jazz</div>
+        <button class="chip" data-target="screen-info">ⓘ</button>
+      </div>
       <div class="meta-pill" style="color:#14933e;">March 26 · Thu · 9:30PM · 2026</div>
       <div class="meta-pill">Madison Square Garden, New York, New York, USA</div>
       <div class="chip-row">
-        <div class="chip">⚙️</div><div class="chip">Quantity</div><div class="chip">Perks</div><div class="chip">Price excl. fees</div><div class="chip">Seat</div>
+        <button class="chip" data-target="screen-filter">⚙️</button>
+        <button class="chip" data-target="screen-quantity">Quantity</button>
+        <button class="chip" data-target="screen-perks">Perks</button>
+        <button class="chip" data-target="screen-price">Price excl. fees</button>
+        <button class="chip" data-target="screen-seat">Seat</button>
       </div>
       <img class="hero-image" src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80" alt="arena" />
       <div class="listing-wrap">
-        <div class="list-head"><span>1,165 listings</span><span style="font-size:30px; font-weight:500;">Sort by ▼</span></div>
-        <div class="ticket-card" onclick="go('screen-merch')">
+        <div class="list-head"><span>1,165 listings</span><button class="sort-btn" data-target="screen-sort">Sort by ▼</button></div>
+        <button class="ticket-card" data-target="screen-merch">
           <img class="thumb" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=500&q=80" alt="seat"/>
-          <div><h4>Section 115</h4><p>Row 11, 10-15</p><div class="badge">1 0 Amazing</div></div>
+          <div><h4>Section 115</h4><p>Row 11, 10-15</p><div class="badge">10 Amazing</div></div>
           <div class="price">$150<small>incl. fees</small></div>
-        </div>
-        <div class="ticket-card" onclick="go('screen-detail')">
+        </button>
+        <button class="ticket-card" data-target="screen-detail">
           <img class="thumb" src="https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=500&q=80" alt="seat"/>
-          <div><h4>Section 107</h4><p>Row 5, 20-25</p><div class="badge">9 4 Amazing</div></div>
+          <div><h4>Section 107</h4><p>Row 5, 20-25</p><div class="badge">94 Amazing</div></div>
           <div class="price">$171<small>incl. fees</small></div>
-        </div>
-        <div class="ticket-card"><img class="thumb" src="https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=500&q=80" alt="seat"/><div><h4>Section 135</h4><p>Row 10, 1-5</p><div class="badge">1 0 Amazing</div></div><div class="price">$121<small>incl. fees</small></div></div>
+        </button>
+        <button class="ticket-card" data-target="screen-detail">
+          <img class="thumb" src="https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=500&q=80" alt="seat"/>
+          <div><h4>Section 135</h4><p>Row 10, 1-5</p><div class="badge">10 Amazing</div></div>
+          <div class="price">$121<small>incl. fees</small></div>
+        </button>
       </div>
-      <div class="cta" onclick="go('screen-merch')">Confirm</div>
+      <button class="cta" data-target="screen-merch">Confirm</button>
     </section>
 
     <section class="screen" id="screen-merch">
-      <div class="top-icons"><button class="icon-btn" onclick="go('screen-list')">←</button><button class="icon-btn">⤴</button></div>
+      <div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button><button class="icon-btn" data-target="screen-share">⤴</button></div>
       <div class="relative">
         <div class="gallery">
           <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=700&q=80" alt="arena"/>
@@ -186,41 +149,41 @@
             <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=500&q=80" alt="club"/>
           </div>
         </div>
-        <div class="view-all">🖼 View all</div>
+        <button class="view-all" data-target="screen-gallery">🖼 View all</button>
       </div>
       <div class="title-block">
         <h2>Detroit Pistons at New York Knicks, Row 2</h2>
-        <div class="cost">$197 <span style="font-weight:500; font-size:31px;">each incl. fees</span></div>
-        <div class="sub">as low as $21/mo or 1.2% APR with affirm &nbsp;&nbsp;&nbsp;&nbsp; view more</div>
+        <div class="cost">$197 <span style="font-weight:500; font-size:14px;">each incl. fees</span></div>
+        <div class="sub">as low as $21/mo or 1.2% APR with affirm · view more</div>
         <div class="line"></div>
-        <div style="font-size:38px;">⚡ Instant purchase & delivery <span style="font-size:29px;color:rgba(0,0,0,.6)">Mobile tickets ⓘ</span></div>
+        <div style="font-size:16px;">⚡ Instant purchase & delivery <span style="font-size:13px;color:rgba(0,0,0,.6)">Mobile tickets ⓘ</span></div>
         <div class="line"></div>
-        <div class="marketplace"><div>Official Ticket Marketplace<br><span style="font-size:32px; font-weight:500;">Tickets are reviewed and verified by the NBA</span></div><div class="logo">NBA</div></div>
+        <div class="marketplace"><div>Official Ticket Marketplace<br><span style="font-size:12px; font-weight:500;">Tickets are reviewed and verified by the NBA</span></div><div class="logo">NBA</div></div>
       </div>
       <div class="line"></div>
-      <div class="field"><span>Quantity</span><span class="right">2 tickets ▼</span></div>
-      <div class="field"><span>Seat numbers</span><span class="right">1,2 ▼</span></div>
-      <div class="field"><span>Merchandise</span><span>▼</span></div>
-      <div class="field"><span>Refreshments</span><span>▼</span></div>
-      <div class="field"><span>Loyalty points</span><span>☑</span></div>
-      <div class="cta" onclick="go('screen-detail')">Confirm</div>
+      <button class="field" data-target="screen-quantity"><span>Quantity</span><span class="right">2 tickets ▼</span></button>
+      <button class="field" data-target="screen-seat"><span>Seat numbers</span><span class="right">1,2 ▼</span></button>
+      <button class="field" data-target="screen-merchandise"><span>Merchandise</span><span>▼</span></button>
+      <button class="field" data-target="screen-refreshments"><span>Refreshments</span><span>▼</span></button>
+      <button class="field" data-target="screen-perks"><span>Loyalty points</span><span>☑</span></button>
+      <button class="cta" data-target="screen-detail">Confirm</button>
     </section>
 
     <section class="screen" id="screen-detail">
-      <div class="top-icons"><button class="icon-btn" onclick="go('screen-list')">←</button><div class="icon-cluster"><button class="icon-btn">🛒</button><button class="icon-btn">♡</button></div></div>
+      <div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button><div class="icon-cluster"><button class="icon-btn" data-target="screen-cart">🛒</button><button class="icon-btn" data-target="screen-favorites">♡</button></div></div>
       <div class="relative">
         <img class="hero-image" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1000&q=80" alt="view"/>
-        <div style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%); color:white; font-size:18px; text-shadow:0 2px 5px rgba(0,0,0,.7)">Estimated View</div>
+        <button class="view-all" data-target="screen-gallery">Estimated View</button>
       </div>
       <div class="title-block">
         <h2>Section 115|Row 15</h2>
-        <div style="font-size:36px;">Seats 4 - 9</div>
-        <div style="font-size:40px; margin-top:5px;">Aerial Viewers</div>
+        <div style="font-size:18px;">Seats 4 - 9</div>
+        <div style="font-size:16px; margin-top:5px;">Aerial Viewers</div>
         <div class="sub">See all tickets in this section</div>
       </div>
       <div class="line"></div>
       <div class="section-title">Merchandise & Refreshments</div>
-      <div style="height:90px"></div>
+      <div style="height:50px"></div>
       <div class="line"></div>
       <div class="section-title">Perks</div>
       <div class="copy">Mobile & Offline ticket</div>
@@ -236,22 +199,41 @@
       <div class="line"></div>
       <div class="section-title">You can pay with</div>
       <div class="pay-cards">
-        <div class="pay-card">💳 Cards</div>
-        <div class="pay-card">🏦 Banks</div>
-        <div class="pay-card">👛 Wallets</div>
+        <button class="pay-card" data-target="screen-checkout">💳 Cards</button>
+        <button class="pay-card" data-target="screen-checkout">🏦 Banks</button>
+        <button class="pay-card" data-target="screen-checkout">👛 Wallets</button>
       </div>
-      <div class="cta">Proceed to checkout</div>
-      <div class="cta add-cart">Add to cart 🛒</div>
+      <button class="cta" data-target="screen-checkout">Proceed to checkout</button>
+      <button class="cta add-cart" data-target="screen-cart">Add to cart 🛒</button>
     </section>
+
+    <section class="screen simple-screen" id="screen-filter"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Filter Listings</h2><p>Configure quantity, perks, prices, and seats here.</p></div></section>
+    <section class="screen simple-screen" id="screen-sort"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Sort Listings</h2><p>Sort by best value, lowest fee, or best view.</p></div></section>
+    <section class="screen simple-screen" id="screen-gallery"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Photo Gallery</h2><p>More seat, concourse, and arena preview images.</p></div></section>
+    <section class="screen simple-screen" id="screen-quantity"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Quantity</h2><p>Choose how many tickets you need.</p></div></section>
+    <section class="screen simple-screen" id="screen-seat"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Seat numbers</h2><p>Pick preferred seat numbers and spacing.</p></div></section>
+    <section class="screen simple-screen" id="screen-merchandise"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Merchandise</h2><p>Select jerseys, hats, and team souvenirs.</p></div></section>
+    <section class="screen simple-screen" id="screen-refreshments"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Refreshments</h2><p>Pre-order food and drinks for pickup.</p></div></section>
+    <section class="screen simple-screen" id="screen-perks"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Perks & Loyalty</h2><p>Apply loyalty points and mobile ticket perks.</p></div></section>
+    <section class="screen simple-screen" id="screen-price"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Price Breakdown</h2><p>View ticket base price, fees, and taxes.</p></div></section>
+    <section class="screen simple-screen" id="screen-checkout"><div class="top-icons"><button class="icon-btn" data-target="screen-detail">←</button></div><div class="simple-card"><h2>Checkout</h2><p>Complete payment and finalize your order.</p></div></section>
+    <section class="screen simple-screen" id="screen-cart"><div class="top-icons"><button class="icon-btn" data-target="screen-detail">←</button></div><div class="simple-card"><h2>Cart</h2><p>Review saved tickets before checkout.</p></div></section>
+    <section class="screen simple-screen" id="screen-share"><div class="top-icons"><button class="icon-btn" data-target="screen-merch">←</button></div><div class="simple-card"><h2>Share Listing</h2><p>Copy or send this ticket to your friends.</p></div></section>
+    <section class="screen simple-screen" id="screen-favorites"><div class="top-icons"><button class="icon-btn" data-target="screen-detail">←</button></div><div class="simple-card"><h2>Favorites</h2><p>Your saved and followed ticket listings.</p></div></section>
+    <section class="screen simple-screen" id="screen-info"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Event Details</h2><p>Venue access rules, date, and game information.</p></div></section>
+    <section class="screen simple-screen" id="screen-calendar"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Calendar</h2><p>Browse upcoming games and available dates.</p></div></section>
+    <section class="screen simple-screen" id="screen-search"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Search</h2><p>Search for teams, venues, and ticket listings.</p></div></section>
+    <section class="screen simple-screen" id="screen-profile"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Profile</h2><p>Manage personal data, orders, and preferences.</p></div></section>
+    <section class="screen simple-screen" id="screen-settings"><div class="top-icons"><button class="icon-btn" data-target="screen-list">←</button></div><div class="simple-card"><h2>Settings</h2><p>Update app preferences and notifications.</p></div></section>
 
     <div class="bottom-nav">
       <div class="nav-shell">
         <div class="nav-items">
-          <div class="nav-item" onclick="go('screen-list')">⌂</div>
-          <div class="nav-item">☷</div>
-          <div class="nav-item">⌕</div>
-          <div class="nav-item">◉</div>
-          <div class="nav-item">⚙</div>
+          <button class="nav-item" data-target="screen-list">⌂</button>
+          <button class="nav-item" data-target="screen-calendar">☷</button>
+          <button class="nav-item" data-target="screen-search">⌕</button>
+          <button class="nav-item" data-target="screen-profile">◉</button>
+          <button class="nav-item" data-target="screen-settings">⚙</button>
         </div>
         <div class="home-indicator"></div>
       </div>
@@ -259,10 +241,16 @@
   </div>
 <script>
   function go(id){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    window.scrollTo({top:0, behavior:'smooth'});
+    const next = document.getElementById(id);
+    if (!next) return;
+    document.querySelectorAll('.screen').forEach((s) => s.classList.remove('active'));
+    next.classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
   }
+
+  document.querySelectorAll('[data-target]').forEach((el) => {
+    el.addEventListener('click', () => go(el.dataset.target));
+  });
 </script>
 </body>
 </html>
