@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 const listingCards = [
   { id: 1, section: 'Section 115', row: 'Row 11, 10-15', price: '$150', badge: '1 0 Amazing', image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80' },
