@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NBA Ticket Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nba-black: #1a1a1a;
+    --nba-navy: #002C5F;
+    --nba-orange: #F58426;
+    --nba-teal: #00BFA5;
+    --knicks-blue: #006BB6;
+    --knicks-orange: #F58426;
+    --bg: #F0F2F5;
+    --white: #ffffff;
+    --gray-1: #f8f9fa;
+    --gray-2: #e9ecef;
+    --gray-3: #dee2e6;
+    --gray-4: #adb5bd;
+    --gray-5: #6c757d;
+    --text: #1a1a2e;
+    --green: #28a745;
+    --red: #dc3545;
+    --gold: #FFD700;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.18);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-x: hidden;
+  }
+
+  /* PHONE SHELL */
+  .phone {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* STATUS BAR */
+  .status-bar {
+    background: var(--knicks-blue);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 16px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+  .status-bar .time { font-weight: 800; }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+
+  /* SCREENS */
+  .screen {
+    display: none;
+    flex-direction: column;
+    min-height: calc(100vh - 28px);
+    animation: fadeIn 0.22s ease;
+  }
+  .screen.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(18px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================
+     SCREEN 1: EVENT DETAILS
+  ============================ */
+  .hero-banner {
+    background: linear-gradient(135deg, var(--knicks-blue) 0%, #001f44 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    padding: 14px 16px 16px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; background: var(--knicks-orange); border-radius: 50%; }
+  .hero-matchup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .team-logo {
+    width: 52px; height: 52px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--knicks-blue);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .vs-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+  }
+  .team-name-col { color: white; }
+  .team-name-col .t-name { font-weight: 800; font-size: 15px; line-height: 1.1; }
+  .team-name-col .t-sub { font-size: 11px; color: rgba(255,255,255,0.65); font-weight: 500; }
+  .hero-info { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-info-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+  .hero-info-item svg { opacity: 0.7; }
+
+  .announce-banner {
+    background: linear-gradient(90deg, #FFD700, var(--knicks-orange));
+    padding: 7px 16px;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--gray-2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 8px;
+    border: none;
+    background: none;
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-5);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tab-btn.active {
+    color: var(--knicks-blue);
+    border-bottom-color: var(--knicks-blue);
+  }
+
+  /* GAMES LIST */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px 8px;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+  .filter-btns {
+    display: flex;
+    gap: 6px;
+    padding: 0 16px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-btns::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--gray-3);
+    background: white;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-5);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn.active {
+    background: var(--knicks-blue);
+    color: white;
+    border-color: var(--knicks-blue);
+  }
+
+  .game-card {
+    margin: 0 16px 8px;
+    background: white;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.18s;
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid transparent;
+  }
+  .game-card:hover, .game-card:active { 
+    border-color: var(--knicks-blue); 
+    transform: translateY(-1px); 
+    box-shadow: var(--shadow-md);
+  }
+  .game-date-col {
+    text-align: center;
+    min-width: 38px;
+  }
+  .game-date-col .day-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--knicks-blue);
+    line-height: 1;
+  }
+  .game-date-col .day-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gray-5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .game-divider {
+    width: 2px;
+    height: 36px;
+    background: var(--gray-2);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .game-info { flex: 1; }
+  .game-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .game-tag.home { background: #e8f4ff; color: var(--knicks-blue); }
+  .game-tag.away { background: #fff3e0; color: #e65100; }
+  .game-tag.opener { background: #fce4ec; color: #c62828; }
+  .game-matchup { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .game-meta { font-size: 11px; color: var(--gray-5); margin-top: 2px; }
+  .game-price {
+    text-align: right;
+  }
+  .game-price .from { font-size: 9px; color: var(--gray-5); font-weight: 600; }
+  .game-price .amount {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--green);
+  }
+  .btn-tickets {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 16px auto;
+    padding: 14px;
+    background: var(--knicks-blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(0,107,182,0.4);
+  }
+  .btn-tickets:hover { background: #004d8c; transform: translateY(-1px); }
+
+  /* ============================
+     SCREEN 2: SEAT BOOKING
+  ============================ */
+  .screen-header {
+    background: var(--knicks-blue);
+    padding: 12px 16px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .back-btn {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.25); }
+  .screen-header-info { flex: 1; }
+  .screen-header-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: white;
+    line-height: 1.1;
+  }
+  .screen-header-sub { font-size: 11px; color: rgba(255,255,255,0.7); }
+
+  /* VENUE MAP */
+  .venue-map {
+    background: #1a2744;
+    margin: 12px 16px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .court-svg { width: 100%; height: 100%; }
+  .map-overlay-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--knicks-blue);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* LISTINGS */
+  .listings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+  }
+  .listings-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-5);
+  }
+  .listings-count span { color: var(--text); font-weight: 800; }
+  .sort-select {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--knicks-blue);
+    border: 1.5px solid var(--gray-3);
+    border-radius: 8px;
+    padding: 4px 8px;
+    background: white;
+    cursor: pointer;
+  }
+
+  .listing-row {
+    margin: 0 16px 8px;
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid transparent;
+    box-shadow: var(--shadow-sm);
+  }
+  .listing-row:hover, .listing-row:active { border-color: var(--knicks-blue); }
+  .listing-row.selected { border-color: var(--knicks-blue); background: #f0f7ff; }
+  .listing-img {
+    width: 64px; height: 44px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: var(--gray-2);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: var(--gray-5);
+    font-weight: 700;
+  }
+  .listing-info { flex: 1; }
+  .listing-section { font-size: 13px; font-weight: 700; color: var(--text); }
+  .listing-row-meta { font-size: 11px; color: var(--gray-5); }
+  .listing-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+  }
+  .badge-amazing { background: #e8f5e9; color: #2e7d32; }
+  .badge-good { background: #e3f2fd; color: #1565c0; }
+  .listing-price {
+    text-align: right;
+  }
+  .listing-price .price-main {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .listing-price .price-each { font-size: 10px; color: var(--gray-5); }
+  .confirm-bar {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 12px 16px;
+    border-top: 1px solid var(--gray-2);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  }
+  .btn-confirm {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--knicks-blue), #004d8c);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,107,182,0.35);
+    transition: all 0.2s;
+  }
+  .btn-confirm:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,107,182,0.45); }
+
+  /* ============================
+     SCREEN 3: TICKET BOOKING (MERCH)
+  ============================ */
+  .ticket-preview-card {
+    margin: 12px 16px;
+    background: linear-gradient(135deg, #1a2744 0%, var(--knicks-blue) 100%);
+    border-radius: var(--radius);
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ticket-preview-card::before {
+    content: '';
+    position: absolute;
+    right: -20px; top: -20px;
+    width: 120px; height: 120px;
+    border: 20px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .ticket-verify {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 8px;
+  }
+  .verify-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+  .ticket-main-info { color: white; }
+  .ticket-main-info .t-section { font-size: 12px; color: rgba(255,255,255,0.65); }
+  .ticket-main-info .t-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .ticket-main-info .t-price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--knicks-orange);
+  }
+  .ticket-main-info .t-fees { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+  .select-group {
+    margin: 0 16px 10px;
+    background: white;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-3);
+    overflow: hidden;
+  }
+  .select-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--gray-2);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .select-row:last-child { border-bottom: none; }
+  .select-row:hover { background: var(--gray-1); }
+  .select-label {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .select-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--knicks-blue);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .select-arrow { color: var(--gray-4); font-size: 12px; }
+
+  .perks-section { padding: 0 16px 10px; }
+  .perks-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .perk-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-5);
+  }
+  .perk-icon { color: var(--green); font-size: 13px; }
+
+  .price-breakdown { padding: 0 16px 10px; }
+  .pb-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .pb-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 4px 0;
+    color: var(--gray-5);
+  }
+  .pb-row.total {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text);
+    border-top: 1.5px solid var(--gray-2);
+    margin-top: 4px;
+    padding-top: 8px;
+  }
+  .pay-with { padding: 0 16px 10px; }
+  .pay-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .pay-methods {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pay-method {
+    padding: 6px 12px;
+    border: 1.5px solid var(--gray-3);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray-5);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pay-method.active { border-color: var(--knicks-blue); color: var(--knicks-blue); background: #f0f7ff; }
+  .action-btns { padding: 0 16px 16px; display: flex; gap: 10px; }
+  .btn-checkout {
+    flex: 1;
+    padding: 13px;
+    background: var(--knicks-blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cart {
+    padding: 13px 16px;
+    background: white;
+    color: var(--knicks-blue);
+    border: 2px solid var(--knicks-blue);
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ============================
+     SCREEN 4: TICKET BOOKING SCREEN (SEAT VIEW)
+  ============================ */
+  .seat-view-img {
+    margin: 12px 16px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a2744, #2d4a8a);
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .seat-view-label {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--knicks-blue);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .seat-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    text-align: center;
+  }
+  .seat-badge .sb-section { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .seat-badge .sb-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .seat-badge .sb-row { font-size: 12px; opacity: 0.8; }
+  .info-card {
+    margin: 0 16px 10px;
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .info-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    color: var(--knicks-blue);
+  }
+  .perks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .perk-chip {
+    background: var(--gray-1);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .perk-chip .pi { font-size: 13px; }
+  .checkout-actions {
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--knicks-blue);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,107,182,0.35);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: var(--knicks-blue);
+    border: 2px solid var(--knicks-blue);
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* ============================
+     SCREEN 5: PAYMENT AUTH
+  ============================ */
+  .payment-summary {
+    margin: 12px 16px;
+    background: linear-gradient(135deg, #1a2744, var(--knicks-blue));
+    border-radius: var(--radius);
+    padding: 14px;
+    color: white;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .payment-team-logo {
+    width: 56px; height: 56px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--knicks-blue);
+    flex-shrink: 0;
+  }
+  .payment-event-info { flex: 1; }
+  .payment-event-info .pe-title { font-weight: 800; font-size: 14px; line-height: 1.2; }
+  .payment-event-info .pe-meta { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+  .payment-event-info .pe-seats { font-size: 11px; color: var(--knicks-orange); font-weight: 700; margin-top: 4px; }
+
+  .select-field {
+    margin: 0 16px 8px;
+    background: white;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-3);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .select-field .sf-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .sf-dot.green { background: var(--green); }
+  .select-field .sf-label { flex: 1; font-size: 13px; color: var(--gray-5); font-weight: 500; }
+  .select-field .sf-value { font-size: 13px; font-weight: 700; color: var(--text); }
+  .select-field .sf-arrow { color: var(--gray-4); }
+
+  .payment-section-title {
+    padding: 12px 16px 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+
+  .card-form {
+    margin: 0 16px;
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-form-header {
+    background: var(--gray-1);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--gray-2);
+  }
+  .card-form-header .cf-title { font-size: 12px; font-weight: 700; color: var(--gray-5); flex: 1; }
+  .security-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .card-logos { display: flex; gap: 4px; }
+  .card-logo {
+    width: 32px; height: 20px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 800;
+  }
+  .card-logo.visa { background: #1a1f71; color: white; }
+  .card-logo.mc { background: #eb001b; color: white; }
+  .card-logo.amex { background: #007bc1; color: white; }
+
+  .form-field {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--gray-2);
+    display: flex;
+    align-items: center;
+  }
+  .form-field:last-child { border-bottom: none; }
+  .form-field input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    background: transparent;
+  }
+  .form-field input::placeholder { color: var(--gray-4); }
+  .form-row-split { display: flex; }
+  .form-row-split .form-field { flex: 1; }
+  .form-row-split .form-field:first-child { border-right: 1px solid var(--gray-2); }
+
+  .btn-pay-now {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 14px auto;
+    padding: 15px;
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(40,167,69,0.4);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-pay-now:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(40,167,69,0.5); }
+  .otp-note {
+    text-align: center;
+    font-size: 10px;
+    color: var(--gray-5);
+    padding: 0 16px 8px;
+  }
+  .alt-pay-btn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 0 auto 8px;
+    padding: 11px;
+    background: white;
+    color: var(--text);
+    border: 1.5px solid var(--gray-3);
+    border-radius: var(--radius);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+  .alt-pay-btn:hover { border-color: var(--knicks-blue); }
+
+  /* ============================
+     SCREEN 6: SUCCESS
+  ============================ */
+  .success-screen {
+    background: linear-gradient(135deg, #1a2744 0%, var(--knicks-blue) 60%, #004d8c 100%);
+    min-height: calc(100vh - 28px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .success-screen::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+    top: -80px; right: -80px;
+  }
+  .success-screen::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: rgba(245,132,38,0.1);
+    border-radius: 50%;
+    bottom: -40px; left: -40px;
+  }
+  .success-checkmark {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--green), #1e7e34);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(40,167,69,0.4);
+    animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .success-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    position: relative; z-index: 1;
+  }
+  .success-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+    line-height: 1.5;
+  }
+  .success-ticket-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 16px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+    box-shadow: var(--shadow-lg);
+  }
+  .stc-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .stc-logo {
+    width: 40px; height: 40px;
+    background: var(--knicks-blue);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    color: white;
+  }
+  .stc-info .stc-title { font-weight: 800; font-size: 13px; line-height: 1.2; color: var(--text); }
+  .stc-info .stc-meta { font-size: 11px; color: var(--gray-5); }
+  .stc-divider { border: none; border-top: 1px dashed var(--gray-3); margin: 10px 0; }
+  .stc-seats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .stc-seat-item { text-align: center; }
+  .stc-seat-item .si-label { font-size: 9px; color: var(--gray-5); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .stc-seat-item .si-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--knicks-blue);
+  }
+  .stc-barcode {
+    margin-top: 12px;
+    height: 36px;
+    background: repeating-linear-gradient(90deg, #000 0, #000 2px, white 2px, white 4px, #000 4px, #000 5px, white 5px, white 8px);
+    border-radius: 4px;
+    opacity: 0.8;
+  }
+  .btn-home {
+    padding: 14px 32px;
+    background: var(--knicks-orange);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(245,132,38,0.4);
+    transition: all 0.2s;
+    position: relative; z-index: 1;
+  }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-top: 1px solid var(--gray-2);
+    display: flex;
+    padding: 6px 0 8px;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 4px;
+    border: none;
+    background: none;
+    color: var(--gray-4);
+    transition: color 0.15s;
+  }
+  .nav-item.active { color: var(--knicks-blue); }
+  .nav-item svg { width: 20px; height: 20px; }
+  .nav-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* DROPDOWN MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 420px;
+    padding: 16px;
+    animation: slideUp 0.25s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-handle { width: 36px; height: 4px; background: var(--gray-3); border-radius: 2px; margin: 0 auto 16px; }
+  .modal-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .option-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1.5px solid var(--gray-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+    width: 100%;
+    font-family: 'Barlow', sans-serif;
+  }
+  .option-btn:hover, .option-btn.selected { border-color: var(--knicks-blue); background: #f0f7ff; }
+  .option-btn .ob-main { font-size: 14px; font-weight: 700; color: var(--text); text-align: left; }
+  .option-btn .ob-sub { font-size: 11px; color: var(--gray-5); text-align: left; }
+  .option-btn .ob-check { color: var(--knicks-blue); font-size: 16px; }
+
+  /* LOADING */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .loading-overlay.open { display: flex; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: white; font-weight: 700; font-size: 14px; }
+
+  .scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 70px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-content::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div class="phone" id="app">
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div class="status-icons">
+      <svg width="15" height="11" viewBox="0 0 15 11" fill="currentColor"><rect x="0" y="4" width="3" height="7" rx="1"/><rect x="4" y="2.5" width="3" height="8.5" rx="1"/><rect x="8" y="1" width="3" height="10" rx="1"/><rect x="12" y="0" width="3" height="11" rx="1"/></svg>
+      <svg width="14" height="11" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 6.5C14.7 6.5 17.2 7.6 19 9.4M5 9.4C6.8 7.6 9.3 6.5 12 6.5"/><path d="M12 13C13.4 13 14.7 13.6 15.6 14.5M8.4 14.5C9.3 13.6 10.6 13 12 13"/><circle cx="12" cy="17" r="1.5" fill="currentColor"/><path d="M2 6C5 2.9 8.8 1 12 1s7 1.9 10 5"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11" fill="currentColor"><rect x="0" y="1" width="18" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="2.5" width="14" height="6" rx="1.2"/><rect x="18.5" y="3.5" width="3" height="4" rx="1"/></svg>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 1: EVENT DETAILS ===== -->
+  <div class="screen active" id="screen-events">
+    <div class="hero-banner">
+      <div class="hero-inner">
+        <div class="hero-badge"><span class="dot"></span> Official Ticket Marketplace</div>
+        <div class="hero-matchup">
+          <div>
+            <div class="team-logo">NYK</div>
+          </div>
+          <div class="team-name-col">
+            <div class="t-name">New York Knicks</div>
+            <div class="t-sub">2024–25 Season</div>
+          </div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-info-item">
+            <svg width="11" height="13" fill="currentColor" viewBox="0 0 24 28"><path d="M12 0C7.6 0 4 3.6 4 8c0 6 8 16 8 16s8-10 8-16c0-4.4-3.6-8-8-8zm0 11c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z"/></svg>
+            Madison Square Garden, NY
+          </div>
+          <div class="hero-info-item">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm.5 5v5.8l4.3 2.5-.8 1.3-5-3V7h1.5z"/></svg>
+            March–April 2026
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="announce-banner">🏆 WE BEAT THE BOSTON CELTICS — ADVANCE TO 2ND ROUND</div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setTab(this, 'tab-events')">Events</button>
+      <button class="tab-btn" onclick="setTab(this, 'tab-parking')">Parking</button>
+      <button class="tab-btn" onclick="setTab(this, 'tab-premium')">Premium</button>
+    </div>
+
+    <div id="tab-events" class="scroll-content">
+      <div class="section-header">
+        <span class="section-title">March 2026</span>
+      </div>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="filterGames(this, 'all')">All Games</button>
+        <button class="filter-btn" onclick="filterGames(this, 'home')">Home & Away</button>
+        <button class="filter-btn" onclick="filterGames(this, 'home-only')">Home Only</button>
+        <button class="filter-btn" onclick="filterGames(this, 'away-only')">Away Only</button>
+        <button class="filter-btn" onclick="filterGames(this, 'playoffs')">Playoffs</button>
+      </div>
+
+      <!-- Game cards -->
+      <div class="game-card" onclick="goToBooking({opponent:'Utah Jazz', date:'Thu Mar 26', time:'5:30PM ET', venue:'Delta Center, Salt Lake City, UT', tag:'away', price:20})">
+        <div class="game-date-col"><div class="day-num">26</div><div class="day-name">Thu</div></div>
+        <div class="game-divider"></div>
+        <div class="game-info">
+          <span class="game-tag away">Away</span>
+          <div class="game-matchup">vs Utah Jazz</div>
+          <div class="game-meta">$20 · 5:30PM ET · Salt Lake City, UT</div>
+        </div>
+        <div class="game-price"><div class="from">From</div><div class="amount">$20</div></div>
+      </div>
+      <div class="game-card" onclick="goToBooking({opponent:'Indiana Pacers', date:'Sat Mar 28', time:'8:00PM ET', venue:'Gainbridge Fieldhouse, Indianapolis, IN', tag:'away', price:25})">
+        <div class="game-date-col"><div class="day-num">28</div><div class="day-name">Sat</div></div>
+        <div class="game-divider"></div>
+        <div class="game-info">
+          <span class="game-tag away">Away</span>
+          <div class="game-matchup">vs Indiana Pacers</div>
+          <div class="game-meta">$25 · 8:00PM ET · Indianapolis, IN</div>
+        </div>
+        <div class="game-price"><div class="from">From</div><div class="amount">$25</div></div>
+      </div>
+      <div class="game-card opener" onclick="goToBooking({opponent:'Golden State Warriors', date:'Mon Mar 30', time:'8:00PM ET', venue:'Madison Square Garden, New York, NY', tag:'home', price:85})">
+        <div class="game-date-col"><div class="day-num">30</div><div class="day-name">Mon</div></div>
+        <div class="game-divider"></div>
+        <div class="game-info">
+          <span class="game-tag opener">Home Opener</span>
+          <div class="game-matchup">vs Golden State Warriors</div>
+          <div class="game-meta">$85 · 8:00PM ET · New York, NY</div>
+        </div>
+        <div class="game-price"><div class="from">From</div><div class="amount">$85</div></div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">April 2026</span>
+      </div>
+      <div class="game-card" onclick="goToBooking({opponent:'Indiana Pacers', date:'Fri Apr 3', time:'8:00PM ET', venue:'Madison Square Garden, New York, NY', tag:'home', price:45})">
+        <div class="game-date-col"><div class="day-num">03</div><div class="day-name">Fri</div></div>
+        <div class="game-divider"></div>
+        <div class="game-info">
+          <span class="game-tag home">Home</span>
+          <div class="game-matchup">vs Indiana Pacers</div>
+          <div class="game-meta">$45 · 8:00PM ET · New York, NY</div>
+        </div>
+        <div class="game-price"><div class="from">From</div><div class="amount">$45</div></div>
+      </div>
+      <div class="game-card" onclick="goToBooking({opponent:'Brooklyn Nets', date:'Sun Apr 5', time:'3:00PM ET', venue:'Barclays Center, Brooklyn, NY', tag:'away', price:18})">
+        <div class="game-date-col"><div class="day-num">05</div><div class="day-name">Sun</div></div>
+        <div class="game-divider"></div>
+        <div class="game-info">
+          <span class="game-tag away">Away</span>
+          <div class="game-matchup">vs Brooklyn Nets</div>
+          <div class="game-meta">$18 · 3:00PM ET · Brooklyn, NY</div>
+        </div>
+        <div class="game-price"><div class="from">From</div><div class="amount">$18</div></div>
+      </div>
+      <div class="game-card" onclick="goToBooking({opponent:'Washington Wizards', date:'Tue Apr 7', time:'5:30PM ET', venue:'Madison Square Garden, New York, NY', tag:'home', price:35})">
+        <div class="game-date-col"><div class="day-num">07</div><div class="day-name">Tue</div></div>
+        <div class="game-divider"></div>
+        <div class="game-info">
+          <span class="game-tag home">Home</span>
+          <div class="game-matchup">vs Washington Wizards</div>
+          <div class="game-meta">$35 · 5:30PM ET · New York, NY</div>
+        </div>
+        <div class="game-price"><div class="from">From</div><div class="amount">$35</div></div>
+      </div>
+
+      <button class="btn-tickets" onclick="goToBooking({opponent:'Utah Jazz', date:'Thu Mar 26', time:'5:30PM ET', venue:'Delta Center, Salt Lake City, UT', tag:'away', price:20})">
+        Get Tickets
+      </button>
+    </div>
+
+    <div id="tab-parking" class="scroll-content" style="display:none; padding: 20px 16px; color: var(--gray-5); text-align:center;">
+      <div style="margin-top:40px;">
+        <div style="font-size:40px; margin-bottom:12px;">🅿️</div>
+        <div style="font-weight:700; font-size:16px; color:var(--text); margin-bottom:8px;">Parking Passes</div>
+        <div style="font-size:13px; line-height:1.5;">Secure your parking spot near Madison Square Garden. Pre-purchase to save up to 40%.</div>
+        <button class="btn-tickets" style="margin-top:20px;" onclick="showTab('tab-events')">View Events Instead</button>
+      </div>
+    </div>
+    <div id="tab-premium" class="scroll-content" style="display:none; padding: 20px 16px; text-align:center;">
+      <div style="margin-top:40px;">
+        <div style="font-size:40px; margin-bottom:12px;">⭐</div>
+        <div style="font-weight:700; font-size:16px; color:var(--text); margin-bottom:8px;">Premium Experiences</div>
+        <div style="font-size:13px; color:var(--gray-5); line-height:1.5;">Courtside, Suite, and VIP packages with exclusive perks and premium hospitality.</div>
+        <button class="btn-tickets" style="margin-top:20px;" onclick="goToBooking({opponent:'Utah Jazz', date:'Thu Mar 26', time:'5:30PM ET', venue:'Madison Square Garden, New York, NY', tag:'home', price:595})">
+          View Premium Tickets
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 2: SEAT BOOKING ===== -->
+  <div class="screen" id="screen-booking">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="screen-header-info">
+        <div class="screen-header-title" id="booking-title">New York Knicks at Utah Jazz</div>
+        <div class="screen-header-sub" id="booking-date">March 26, Thu • 5:30PM • Delta Center</div>
+      </div>
+    </div>
+
+    <!-- Court map SVG -->
+    <div class="venue-map">
+      <svg class="court-svg" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="180" fill="#0f1c35"/>
+        <!-- Court floor -->
+        <rect x="60" y="40" width="200" height="100" rx="8" fill="#c8a96e" stroke="#a0844a" stroke-width="1.5"/>
+        <!-- Center circle -->
+        <circle cx="160" cy="90" r="20" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <circle cx="160" cy="90" r="3" fill="#a0844a"/>
+        <!-- Half court line -->
+        <line x1="160" y1="40" x2="160" y2="140" stroke="#a0844a" stroke-width="1.5"/>
+        <!-- Left key -->
+        <rect x="60" y="68" width="36" height="44" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <path d="M60,68 Q78,57 96,68" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <!-- Right key -->
+        <rect x="224" y="68" width="36" height="44" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <path d="M224,68 Q242,57 260,68" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <!-- 3 point arcs -->
+        <path d="M60,55 Q110,25 160,90 Q110,155 60,125" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <path d="M260,55 Q210,25 160,90 Q210,155 260,125" fill="none" stroke="#a0844a" stroke-width="1.5"/>
+        <!-- Sections labels -->
+        <text x="25" y="92" fill="#4a9eff" font-size="7" font-family="Barlow,sans-serif" font-weight="700" text-anchor="middle">SEC 115</text>
+        <text x="25" y="102" fill="#4a9eff" font-size="6" text-anchor="middle">$150</text>
+        <text x="25" y="115" fill="#ffd700" font-size="6" text-anchor="middle">★ AMAZING</text>
+        <text x="160" y="18" fill="#ff6b6b" font-size="7" font-family="Barlow,sans-serif" font-weight="700" text-anchor="middle">SEC 135 · $121</text>
+        <text x="295" y="92" fill="#4ae" font-size="7" font-family="Barlow,sans-serif" font-weight="700" text-anchor="middle">SEC 107</text>
+        <text x="295" y="102" fill="#4ae" font-size="6" text-anchor="middle">$171</text>
+        <text x="160" y="168" fill="#8bc" font-size="7" font-family="Barlow,sans-serif" font-weight="700" text-anchor="middle">SEC 97 · $245 ★</text>
+        <!-- Selected highlight -->
+        <rect x="8" y="72" width="24" height="36" rx="4" fill="rgba(0,107,182,0.5)" stroke="#006bb6" stroke-width="2"/>
+      </svg>
+      <button class="map-overlay-btn">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        View All
+      </button>
+    </div>
+
+    <div class="listings-header">
+      <div class="listings-count"><span id="listing-count">1,165</span> listings</div>
+      <select class="sort-select" onchange="sortListings(this.value)">
+        <option value="price">Sort by Price</option>
+        <option value="section">By Section</option>
+        <option value="best">Best Seats</option>
+        <option value="deal">Best Deal</option>
+      </select>
+    </div>
+
+    <div class="scroll-content" id="listings-container">
+      <!-- Listings injected by JS -->
+    </div>
+
+    <div class="confirm-bar">
+      <button class="btn-confirm" onclick="goToMerch()">Confirm Seats</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 3: MERCH & QUANTITY ===== -->
+  <div class="screen" id="screen-merch">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="screen-header-info">
+        <div class="screen-header-title">Ticket Booking</div>
+        <div class="screen-header-sub" id="merch-subtitle">Detroit Pistons at New York Knicks</div>
+      </div>
+    </div>
+
+    <div class="ticket-preview-card">
+      <div class="ticket-verify">
+        <div class="verify-dot"></div>
+        Instant purchase & delivery · Verified by the NBA
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div class="ticket-main-info">
+          <div class="t-section" id="tp-section">Section 115, Row 2</div>
+          <div class="t-title" id="tp-title">Detroit Pistons at<br>New York Knicks</div>
+          <div class="t-price" id="tp-price">$197</div>
+          <div class="t-fees">incl. fees · 2 tickets</div>
+        </div>
+        <div style="text-align:center;">
+          <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.1"/>
+            <text x="50" y="58" text-anchor="middle" fill="white" font-size="24" font-weight="800" font-family="Barlow Condensed">NBA</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-content">
+      <div class="select-group">
+        <div class="select-row" onclick="openModal('qty-modal')">
+          <span class="select-label">Quantity</span>
+          <span class="select-value" id="qty-display">2 tickets <span class="select-arrow">▾</span></span>
+        </div>
+        <div class="select-row" onclick="openModal('seat-modal')">
+          <span class="select-label">Seat numbers</span>
+          <span class="select-value" id="seat-display">12 <span class="select-arrow">▾</span></span>
+        </div>
+        <div class="select-row" onclick="openModal('merch-modal')">
+          <span class="select-label">Merchandise</span>
+          <span class="select-value" id="merch-display">None <span class="select-arrow">▾</span></span>
+        </div>
+        <div class="select-row" onclick="openModal('refresh-modal')">
+          <span class="select-label">Refreshments</span>
+          <span class="select-value" id="refresh-display">None <span class="select-arrow">▾</span></span>
+        </div>
+        <div class="select-row">
+          <span class="select-label">Loyalty points</span>
+          <span class="select-value" style="color:var(--knicks-orange)">🏅 842 pts <span class="select-arrow">▾</span></span>
+        </div>
+      </div>
+
+      <div class="perks-section">
+        <div class="perks-title">Perks</div>
+        <div class="perk-item"><span class="perk-icon">✓</span> Mobile & Offline ticket</div>
+        <div class="perk-item"><span class="perk-icon">✓</span> Aerial view</div>
+        <div class="perk-item"><span class="perk-icon">✓</span> You will be seated together</div>
+        <div class="perk-item"><span class="perk-icon">✓</span> Can reset, and if plans change</div>
+      </div>
+
+      <div class="price-breakdown">
+        <div class="pb-title">Price Breakdown</div>
+        <div class="pb-row"><span>Ticket price</span><span id="pb-ticket-price">$197.00</span></div>
+        <div class="pb-row"><span>Fees</span><span id="pb-fees">$24.00</span></div>
+        <div class="pb-row"><span>Merchandise</span><span id="pb-merch-cost">$0.00</span></div>
+        <div class="pb-row total"><span>Per ticket incl. fees</span><span id="pb-total">$221.00</span></div>
+      </div>
+
+      <div class="pay-with">
+        <div class="pay-title">You can pay with</div>
+        <div class="pay-methods">
+          <button class="pay-method active" onclick="selectPayMethod(this)">💳 Cards</button>
+          <button class="pay-method" onclick="selectPayMethod(this)">🏦 Banks</button>
+          <button class="pay-method" onclick="selectPayMethod(this)">👛 Wallets</button>
+        </div>
+      </div>
+
+      <div class="action-btns">
+        <button class="btn-checkout" onclick="goToSeatView()">Proceed to Checkout</button>
+        <button class="btn-cart" onclick="showToast('Added to cart! 🛒')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Add to cart
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 4: SEAT VIEW ===== -->
+  <div class="screen" id="screen-seatview">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="screen-header-info">
+        <div class="screen-header-title">Ticket Booking Screen</div>
+        <div class="screen-header-sub" id="sv-subtitle">Section 115 · Row 15</div>
+      </div>
+    </div>
+
+    <!-- Seat view visualization -->
+    <div class="seat-view-img">
+      <svg width="100%" height="100%" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="floorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#c8a96e;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#8a6520;stop-opacity:1"/>
+          </linearGradient>
+          <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#0a1628;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#1a2744;stop-opacity:1"/>
+          </linearGradient>
+        </defs>
+        <rect width="340" height="160" fill="url(#bgGrad)"/>
+        <!-- Court perspective -->
+        <ellipse cx="170" cy="130" rx="150" ry="60" fill="#1a3a1a" opacity="0.3"/>
+        <!-- Floor boards perspective -->
+        <polygon points="20,160 170,80 320,160" fill="url(#floorGrad)" opacity="0.9"/>
+        <!-- Court lines -->
+        <ellipse cx="170" cy="155" rx="80" ry="18" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <line x1="170" y1="80" x2="170" y2="160" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <!-- Basket near -->
+        <line x1="140" y1="100" x2="200" y2="100" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+        <rect x="155" y="94" width="30" height="16" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+        <!-- Seat rows visible -->
+        <rect x="0" y="0" width="340" height="40" fill="rgba(0,0,0,0.4)"/>
+        <text x="170" y="26" text-anchor="middle" fill="white" font-size="11" font-family="Barlow Condensed,sans-serif" font-weight="800">SECTION 115 · ROW 15 · AERIAL VIEW</text>
+        <!-- Highlight selected seats -->
+        <rect x="150" y="70" width="16" height="12" rx="2" fill="var(--knicks-orange)" stroke="white" stroke-width="1"/>
+        <rect x="170" y="70" width="16" height="12" rx="2" fill="var(--knicks-orange)" stroke="white" stroke-width="1"/>
+        <text x="158" y="79" text-anchor="middle" fill="white" font-size="6" font-weight="700">12</text>
+        <text x="178" y="79" text-anchor="middle" fill="white" font-size="6" font-weight="700">13</text>
+      </svg>
+      <div class="seat-view-label">
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Aerial Viewers
+      </div>
+    </div>
+
+    <div class="scroll-content">
+      <div class="info-card">
+        <div class="info-card-title">Seats A: 4-8 · See items on the section</div>
+        <div style="font-size:12px; color:var(--gray-5);">Your selected seats give you an excellent view of the entire court with minimal obstructions.</div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">Merchandise & Refreshments</div>
+        <div class="perks-grid">
+          <div class="perk-chip"><span class="pi">📱</span> Mobile ticket</div>
+          <div class="perk-chip"><span class="pi">✈️</span> Aerial view</div>
+          <div class="perk-chip"><span class="pi">👥</span> Seated together</div>
+          <div class="perk-chip"><span class="pi">🔄</span> Plans change OK</div>
+          <div class="perk-chip"><span class="pi">🍔</span> Food nearby</div>
+          <div class="perk-chip"><span class="pi">🏆</span> Club access</div>
+        </div>
+      </div>
+
+      <div class="checkout-actions">
+        <button class="btn-primary" onclick="goToPayment()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Proceed to Checkout
+        </button>
+        <button class="btn-secondary" onclick="showToast('Added to cart! 🛒')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Add to Cart · <span id="sv-price-tag">$221</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 5: PAYMENT ===== -->
+  <div class="screen" id="screen-payment">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="screen-header-info">
+        <div class="screen-header-title">Payment Authentication</div>
+        <div class="screen-header-sub">Secure checkout</div>
+      </div>
+    </div>
+
+    <div class="payment-summary">
+      <div class="payment-team-logo">NYK</div>
+      <div class="payment-event-info">
+        <div class="pe-title" id="pay-event-title">New York Knicks at Utah Jazz</div>
+        <div class="pe-meta" id="pay-event-meta">Delta Center · Utah, USA</div>
+        <div class="pe-seats">📍 Section 115, Row 15</div>
+      </div>
+    </div>
+
+    <div class="select-field">
+      <div class="sf-dot green"></div>
+      <span class="sf-label">Ticket type</span>
+      <span class="sf-value">Standard</span>
+      <span class="sf-arrow">▾</span>
+    </div>
+    <div class="select-field">
+      <div class="sf-dot green"></div>
+      <span class="sf-label">Delivery method</span>
+      <span class="sf-value">Mobile Ticket</span>
+      <span class="sf-arrow">▾</span>
+    </div>
+    <div class="select-field">
+      <div class="sf-dot green"></div>
+      <span class="sf-label">Currency</span>
+      <span class="sf-value">USD $</span>
+      <span class="sf-arrow">▾</span>
+    </div>
+
+    <div class="payment-section-title">Payment</div>
+
+    <div class="card-form">
+      <div class="card-form-header">
+        <span>🔒</span>
+        <div class="cf-title">Secure Credit Card Payment</div>
+        <div class="security-badge">
+          <svg width="10" height="12" fill="currentColor" viewBox="0 0 24 28"><path d="M12 0L2 4v8c0 7.7 4.3 14.8 10 17 5.7-2.2 10-9.3 10-17V4L12 0z"/></svg>
+          Secure
+        </div>
+      </div>
+      <div class="card-form-header" style="background:white; padding: 8px 14px; border-bottom: 1px solid var(--gray-2);">
+        <div class="card-logos">
+          <div class="card-logo visa">VISA</div>
+          <div class="card-logo mc">MC</div>
+          <div class="card-logo amex">AMX</div>
+          <div style="font-size:9px; font-weight:700; color:var(--gray-4); display:flex; align-items:center;">+3</div>
+        </div>
+      </div>
+      <div class="form-field">
+        <input type="text" placeholder="Cardholder Name" id="card-name">
+      </div>
+      <div class="form-field">
+        <input type="tel" placeholder="Card Number" id="card-num" maxlength="19" oninput="formatCard(this)">
+        <svg width="20" height="14" fill="none" viewBox="0 0 32 22"><rect width="32" height="22" rx="3" fill="#e5e7eb"/><rect x="0" y="6" width="32" height="5" fill="#9ca3af"/></svg>
+      </div>
+      <div class="form-row-split">
+        <div class="form-field">
+          <input type="tel" placeholder="Expiry Date" id="card-exp" maxlength="5" oninput="formatExpiry(this)">
+        </div>
+        <div class="form-field">
+          <input type="tel" placeholder="CVV/2" id="card-cvv" maxlength="4">
+          <svg width="18" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-pay-now" onclick="processPayment()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Pay Now · <span id="pay-total-btn">$442.00</span>
+    </button>
+    <div class="otp-note">🔐 One Time Passwords sent to the number attached to this card</div>
+
+    <button class="alt-pay-btn" onclick="showToast('Redirecting to CardPro...')">Card Pro</button>
+    <button class="alt-pay-btn" onclick="showToast('Opening OTP authenticator...')">OTP</button>
+    <div style="padding: 0 16px 20px; display:flex; gap:8px;">
+      <button class="btn-confirm" style="background:var(--green);" onclick="processPayment()">Confirm</button>
+      <button class="btn-confirm" style="background:var(--red);" onclick="goBack()">Drop</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 6: SUCCESS ===== -->
+  <div class="screen" id="screen-success">
+    <div class="success-screen">
+      <div class="success-checkmark">✓</div>
+      <div class="success-title">BOOKING<br>CONFIRMED!</div>
+      <div class="success-sub">Your tickets have been secured.<br>Check your email for details.</div>
+
+      <div class="success-ticket-card">
+        <div class="stc-header">
+          <div class="stc-logo">NYK</div>
+          <div class="stc-info">
+            <div class="stc-title" id="sc-title">New York Knicks at Utah Jazz</div>
+            <div class="stc-meta" id="sc-meta">Thu, Mar 26 · 5:30 PM</div>
+          </div>
+        </div>
+        <hr class="stc-divider">
+        <div class="stc-seats">
+          <div class="stc-seat-item">
+            <div class="si-label">Section</div>
+            <div class="si-val">115</div>
+          </div>
+          <div class="stc-seat-item">
+            <div class="si-label">Row</div>
+            <div class="si-val">15</div>
+          </div>
+          <div class="stc-seat-item">
+            <div class="si-label">Seats</div>
+            <div class="si-val">12–13</div>
+          </div>
+          <div class="stc-seat-item">
+            <div class="si-label">Total</div>
+            <div class="si-val" id="sc-total" style="color:var(--green);">$442</div>
+          </div>
+        </div>
+        <div class="stc-barcode"></div>
+      </div>
+
+      <button class="btn-home" onclick="goHome()">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV (hidden on success) -->
+  <div class="bottom-nav" id="bottom-nav">
+    <button class="nav-item active" onclick="navTo('screen-events', this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" onclick="navTo('screen-booking', this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span class="nav-label">Search</span>
+    </button>
+    <button class="nav-item" onclick="showToast('My Tickets coming soon!')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
+      <span class="nav-label">Tickets</span>
+    </button>
+    <button class="nav-item" onclick="showToast('Notifications coming soon!')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="nav-label">Alerts</span>
+    </button>
+    <button class="nav-item" onclick="showToast('Profile coming soon!')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-label">Profile</span>
+    </button>
+  </div>
+
+  <!-- MODALS -->
+  <!-- Quantity Modal -->
+  <div class="modal-overlay" id="qty-modal" onclick="closeModalOutside(event, 'qty-modal')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Select Quantity</div>
+      <button class="option-btn selected" onclick="selectQty(1, this)"><div><div class="ob-main">1 Ticket</div><div class="ob-sub">Single entry</div></div><span class="ob-check">✓</span></button>
+      <button class="option-btn" onclick="selectQty(2, this)"><div><div class="ob-main">2 Tickets</div><div class="ob-sub">Seated together guaranteed</div></div><span class="ob-check" style="display:none">✓</span></button>
+      <button class="option-btn" onclick="selectQty(3, this)"><div><div class="ob-main">3 Tickets</div><div class="ob-sub">Group seating</div></div><span class="ob-check" style="display:none">✓</span></button>
+      <button class="option-btn" onclick="selectQty(4, this)"><div><div class="ob-main">4 Tickets</div><div class="ob-sub">Best value for groups</div></div><span class="ob-check" style="display:none">✓</span></button>
+    </div>
+  </div>
+
+  <!-- Seat Modal -->
+  <div class="modal-overlay" id="seat-modal" onclick="closeModalOutside(event, 'seat-modal')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Select Seats</div>
+      <button class="option-btn selected" onclick="selectSeat('12, 13', this)"><div><div class="ob-main">Seats 12, 13</div><div class="ob-sub">Row 15 · Section 115</div></div><span class="ob-check">✓</span></button>
+      <button class="option-btn" onclick="selectSeat('8, 9', this)"><div><div class="ob-main">Seats 8, 9</div><div class="ob-sub">Row 12 · Section 115</div></div><span class="ob-check" style="display:none">✓</span></button>
+      <button class="option-btn" onclick="selectSeat('4, 5', this)"><div><div class="ob-main">Seats 4, 5</div><div class="ob-sub">Row 10 · Closer to court</div></div><span class="ob-check" style="display:none">✓</span></button>
+    </div>
+  </div>
+
+  <!-- Merchandise Modal -->
+  <div class="modal-overlay" id="merch-modal" onclick="closeModalOutside(event, 'merch-modal')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Add Merchandise</div>
+      <button class="option-btn selected" onclick="selectMerch('None', 0, this)"><div><div class="ob-main">No Merchandise</div><div class="ob-sub">Skip add-ons</div></div><span class="ob-check">✓</span></button>
+      <button class="option-btn" onclick="selectMerch('Knicks Jersey +$120', 120, this)"><div><div class="ob-main">Knicks Jersey · +$120</div><div class="ob-sub">Official NBA jersey</div></div><span class="ob-check" style="display:none">✓</span></button>
+      <button class="option-btn" onclick="selectMerch('Game Program +$15', 15, this)"><div><div class="ob-main">Game Program · +$15</div><div class="ob-sub">Official match program</div></div><span class="ob-check" style="display:none">✓</span></button>
+      <button class="option-btn" onclick="selectMerch('Team Cap +$35', 35, this)"><div><div class="ob-main">Team Cap · +$35</div><div class="ob-sub">Official Knicks cap</div></div><span class="ob-check" style="display:none">✓</span></button>
+    </div>
+  </div>
+
+  <!-- Refreshments Modal -->
+  <div class="modal-overlay" id="refresh-modal" onclick="closeModalOutside(event, 'refresh-modal')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Add Refreshments</div>
+      <button class="option-btn selected" onclick="selectRefresh('None', 0, this)"><div><div class="ob-main">No Refreshments</div><div class="ob-sub">Buy at venue instead</div></div><span class="ob-check">✓</span></button>
+      <button class="option-btn" onclick="selectRefresh('Meal Deal +$28', 28, this)"><div><div class="ob-main">Meal Deal · +$28</div><div class="ob-sub">Burger, fries & drink</div></div><span class="ob-check" style="display:none">✓</span></button>
+      <button class="option-btn" onclick="selectRefresh('Drinks Package +$18', 18, this)"><div><div class="ob-main">Drinks Package · +$18</div><div class="ob-sub">2x large sodas or beer</div></div><span class="ob-check" style="display:none">✓</span></button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-text">Processing...</div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" style="
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #1a1a1a; color: white; padding: 10px 20px; border-radius: 24px;
+    font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 999;
+    white-space: nowrap; max-width: 320px; text-align: center;
+    pointer-events: none;
+  "></div>
+</div>
+
+<script>
+// ===========================
+// STATE
+// ===========================
+let state = {
+  currentScreen: 'screen-events',
+  screenHistory: [],
+  selectedGame: null,
+  selectedListing: null,
+  quantity: 2,
+  seats: '12, 13',
+  merch: 'None',
+  merchCost: 0,
+  refresh: 'None',
+  refreshCost: 0,
+  ticketPrice: 197,
+  fees: 24,
+  paymentTotal: 0
+};
+
+const listings = [
+  { section: 'Section 115', row: 'Row 8', qty: '2-4', price: 150, badge: 'amazing', view: 'Courtside angle' },
+  { section: 'Section 107', row: 'Row 5', qty: '2', price: 171, badge: 'good', view: 'Corner view' },
+  { section: 'Section 135', row: 'Row 12', qty: '1-3', price: 121, badge: null, view: 'Upper level' },
+  { section: 'Section 97', row: 'Row 3', qty: '2-6', price: 245, badge: 'amazing', view: 'Premium sideline' },
+  { section: 'Section 158', row: 'Row 18', qty: '2', price: 97, badge: 'good', view: 'End zone' },
+  { section: 'Section 122', row: 'Row 7', qty: '4', price: 189, badge: 'amazing', view: 'Mid court' },
+  { section: 'Section 201', row: 'Row 2', qty: '1-2', price: 310, badge: null, view: 'VIP lower bowl' },
+  { section: 'Section 89', row: 'Row 10', qty: '3', price: 78, badge: 'good', view: 'Budget pick' },
+];
+
+// ===========================
+// NAVIGATION
+// ===========================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  state.currentScreen = id;
+  
+  const nav = document.getElementById('bottom-nav');
+  nav.style.display = id === 'screen-success' ? 'none' : 'flex';
+  
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  if (state.screenHistory.length > 0) {
+    const prev = state.screenHistory.pop();
+    showScreen(prev);
+  }
+}
+
+function navigate(to) {
+  state.screenHistory.push(state.currentScreen);
+  showScreen(to);
+}
+
+function navTo(screenId, btn) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  btn.classList.add('active');
+  state.screenHistory = [];
+  showScreen(screenId);
+  if (screenId === 'screen-booking') renderListings();
+}
+
+// ===========================
+// GAME SELECTION
+// ===========================
+function goToBooking(game) {
+  state.selectedGame = game;
+  state.ticketPrice = game.price;
+  state.fees = Math.round(game.price * 0.12);
+
+  document.getElementById('booking-title').textContent = `New York Knicks at ${game.opponent}`;
+  document.getElementById('booking-date').textContent = `${game.date} · ${game.time} · ${game.venue}`;
+
+  renderListings();
+  navigate('screen-booking');
+}
+
+function renderListings(sorted) {
+  const container = document.getElementById('listings-container');
+  const data = sorted || [...listings];
+  const game = state.selectedGame;
+  
+  container.innerHTML = data.map((l, i) => `
+    <div class="listing-row ${state.selectedListing === i ? 'selected' : ''}" onclick="selectListing(${i}, this)">
+      <div class="listing-img" style="background: linear-gradient(135deg, #1a2744, #2d4a8a);">
+        <svg width="40" height="28" viewBox="0 0 100 70" fill="none">
+          <rect width="100" height="70" fill="#1a3366" rx="4"/>
+          <rect x="10" y="12" width="80" height="46" rx="2" fill="#c8a96e" opacity="0.5"/>
+          <line x1="50" y1="12" x2="50" y2="58" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <ellipse cx="50" cy="35" rx="12" ry="12" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="listing-info">
+        <div class="listing-section">${l.section}</div>
+        <div class="listing-row-meta">${l.row} · ${l.qty} tickets · ${l.view}</div>
+        ${l.badge ? `<span class="listing-badge badge-${l.badge}">${l.badge === 'amazing' ? '★ Amazing' : '✓ Good'}</span>` : ''}
+      </div>
+      <div class="listing-price">
+        <div class="price-main">$${l.price}</div>
+        <div class="price-each">each</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectListing(i, el) {
+  state.selectedListing = i;
+  state.ticketPrice = listings[i].price;
+  state.fees = Math.round(listings[i].price * 0.12);
+  document.querySelectorAll('.listing-row').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function sortListings(val) {
+  let sorted = [...listings];
+  if (val === 'price') sorted.sort((a,b) => a.price - b.price);
+  else if (val === 'best') sorted = sorted.filter(l => l.badge === 'amazing').concat(sorted.filter(l => l.badge !== 'amazing'));
+  else if (val === 'deal') sorted.sort((a,b) => a.price - b.price);
+  renderListings(sorted);
+}
+
+// ===========================
+// MERCH SCREEN
+// ===========================
+function goToMerch() {
+  const game = state.selectedGame || { opponent: 'Utah Jazz', date: 'Thu Mar 26', time: '5:30PM ET' };
+  const listing = listings[state.selectedListing || 0];
+  
+  document.getElementById('merch-subtitle').textContent = `New York Knicks at ${game.opponent}`;
+  document.getElementById('tp-section').textContent = `${listing.section}, ${listing.row}`;
+  document.getElementById('tp-title').textContent = `New York Knicks at\n${game.opponent}`;
+  document.getElementById('tp-price').textContent = `$${listing.price * state.quantity}`;
+  
+  updatePriceBreakdown();
+  navigate('screen-merch');
+}
+
+function updatePriceBreakdown() {
+  const listing = listings[state.selectedListing || 0];
+  const base = listing ? listing.price : state.ticketPrice;
+  const qty = state.quantity;
+  const fees = Math.round(base * 0.12);
+  const total = (base + fees + state.merchCost / qty + state.refreshCost / qty) * qty;
+  
+  document.getElementById('pb-ticket-price').textContent = `$${(base * qty).toFixed(2)}`;
+  document.getElementById('pb-fees').textContent = `$${(fees * qty).toFixed(2)}`;
+  document.getElementById('pb-merch-cost').textContent = `$${(state.merchCost + state.refreshCost).toFixed(2)}`;
+  document.getElementById('pb-total').textContent = `$${total.toFixed(2)}`;
+  state.paymentTotal = total;
+}
+
+// ===========================
+// SEAT VIEW
+// ===========================
+function goToSeatView() {
+  const game = state.selectedGame || { opponent: 'Utah Jazz' };
+  document.getElementById('sv-subtitle').textContent = `Section 115 · Row 15`;
+  document.getElementById('sv-price-tag').textContent = `$${state.paymentTotal.toFixed(0)}`;
+  navigate('screen-seatview');
+}
+
+// ===========================
+// PAYMENT
+// ===========================
+function goToPayment() {
+  const game = state.selectedGame || { opponent: 'Utah Jazz', venue: 'Delta Center, Utah, USA' };
+  document.getElementById('pay-event-title').textContent = `New York Knicks at ${game.opponent}`;
+  document.getElementById('pay-event-meta').textContent = game.venue || 'Madison Square Garden, NY';
+  document.getElementById('pay-total-btn').textContent = `$${state.paymentTotal.toFixed(2)}`;
+  navigate('screen-payment');
+}
+
+function processPayment() {
+  const name = document.getElementById('card-name').value;
+  const num = document.getElementById('card-num').value;
+  const exp = document.getElementById('card-exp').value;
+  const cvv = document.getElementById('card-cvv').value;
+
+  if (!name.trim()) { showToast('⚠️ Please enter cardholder name'); return; }
+  if (num.replace(/\s/g, '').length < 16) { showToast('⚠️ Please enter a valid card number'); return; }
+  if (exp.length < 5) { showToast('⚠️ Please enter expiry date'); return; }
+  if (cvv.length < 3) { showToast('⚠️ Please enter CVV'); return; }
+
+  showLoading('Processing payment...');
+  setTimeout(() => {
+    hideLoading();
+    const game = state.selectedGame || { opponent: 'Utah Jazz', date: 'Thu Mar 26' };
+    document.getElementById('sc-title').textContent = `New York Knicks at ${game.opponent}`;
+    document.getElementById('sc-meta').textContent = `${game.date} · ${game.time || '5:30 PM'}`;
+    document.getElementById('sc-total').textContent = `$${state.paymentTotal.toFixed(0)}`;
+    navigate('screen-success');
+  }, 2200);
+}
+
+function goHome() {
+  state.screenHistory = [];
+  state.selectedGame = null;
+  state.selectedListing = null;
+  showScreen('screen-events');
+  document.querySelectorAll('.nav-item').forEach((n,i) => n.classList.toggle('active', i === 0));
+}
+
+// ===========================
+// TABS
+// ===========================
+function setTab(btn, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['tab-events', 'tab-parking', 'tab-premium'].forEach(id => {
+    document.getElementById(id).style.display = id === tabId ? 'block' : 'none';
+  });
+}
+
+function filterGames(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===========================
+// MODALS
+// ===========================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function closeModalOutside(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+function selectQty(qty, btn) {
+  state.quantity = qty;
+  document.getElementById('qty-display').innerHTML = `${qty} ticket${qty > 1 ? 's' : ''} <span class="select-arrow">▾</span>`;
+  document.querySelectorAll('#qty-modal .option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.querySelector('.ob-check').style.display = 'none';
+  });
+  btn.classList.add('selected');
+  btn.querySelector('.ob-check').style.display = 'block';
+  updatePriceBreakdown();
+  setTimeout(() => closeModal('qty-modal'), 200);
+}
+
+function selectSeat(val, btn) {
+  state.seats = val;
+  document.getElementById('seat-display').innerHTML = `${val} <span class="select-arrow">▾</span>`;
+  document.querySelectorAll('#seat-modal .option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.querySelector('.ob-check').style.display = 'none';
+  });
+  btn.classList.add('selected');
+  btn.querySelector('.ob-check').style.display = 'block';
+  setTimeout(() => closeModal('seat-modal'), 200);
+}
+
+function selectMerch(val, cost, btn) {
+  state.merch = val;
+  state.merchCost = cost;
+  document.getElementById('merch-display').innerHTML = `${val} <span class="select-arrow">▾</span>`;
+  document.querySelectorAll('#merch-modal .option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.querySelector('.ob-check').style.display = 'none';
+  });
+  btn.classList.add('selected');
+  btn.querySelector('.ob-check').style.display = 'block';
+  updatePriceBreakdown();
+  setTimeout(() => closeModal('merch-modal'), 200);
+}
+
+function selectRefresh(val, cost, btn) {
+  state.refresh = val;
+  state.refreshCost = cost;
+  document.getElementById('refresh-display').innerHTML = `${val} <span class="select-arrow">▾</span>`;
+  document.querySelectorAll('#refresh-modal .option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.querySelector('.ob-check').style.display = 'none';
+  });
+  btn.classList.add('selected');
+  btn.querySelector('.ob-check').style.display = 'block';
+  updatePriceBreakdown();
+  setTimeout(() => closeModal('refresh-modal'), 200);
+}
+
+function selectPayMethod(btn) {
+  document.querySelectorAll('.pay-method').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===========================
+// FORM FORMATTING
+// ===========================
+function formatCard(input) {
+  let val = input.value.replace(/\D/g, '').substring(0, 16);
+  input.value = val.replace(/(.{4})/g, '$1 ').trim();
+}
+function formatExpiry(input) {
+  let val = input.value.replace(/\D/g, '').substring(0, 4);
+  if (val.length >= 2) val = val.substring(0, 2) + '/' + val.substring(2);
+  input.value = val;
+}
+
+// ===========================
+// UI HELPERS
+// ===========================
+function showLoading(msg) {
+  document.getElementById('loading-text').textContent = msg || 'Loading...';
+  document.getElementById('loading').classList.add('open');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.remove('open');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2500);
+}
+
+// Update clock
+function updateTime() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = now.getMinutes().toString().padStart(2, '0');
+  document.querySelector('.status-bar .time').textContent = `${h}:${m}`;
+}
+updateTime();
+setInterval(updateTime, 30000);
+
+// Initialize
+renderListings();
+updatePriceBreakdown();
+</script>
+</body>
+</html>
