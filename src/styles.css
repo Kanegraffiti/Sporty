@@ -18,7 +18,7 @@ button, select { font: inherit; }
 .phone {
   width: min(430px, 100vw);
   min-height: 100vh;
-  padding: 10px 10px 108px;
+  padding: 8px 10px 108px;
   position: relative;
 }
 
@@ -26,22 +26,22 @@ button, select { font: inherit; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 4px 12px;
-  font-size: 34px;
+  padding: 4px 2px 10px;
+  font-size: 27px;
 }
-.status-icons { font-size: 18px; }
+.status-icons { font-size: 13px; }
 .screen { display: flex; flex-direction: column; gap: 10px; }
 
 .icon-row { display: flex; justify-content: space-between; align-items: center; }
 .right-icons { display: flex; gap: 10px; }
 .circle-btn {
-  width: 52px;
-  height: 52px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 1.5px solid #51450c;
-  background: linear-gradient(180deg, #f4cf2d, #bb980a);
-  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
-  font-size: 24px;
+  border: 1px solid #4b4b4b;
+  background: #f5f5f5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
   cursor: pointer;
 }
 
@@ -54,13 +54,13 @@ button, select { font: inherit; }
 }
 
 .title-pill {
-  margin-top: -64px;
+  margin-top: -56px;
   align-self: center;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid #1f1f1f;
   border-radius: 18px;
-  padding: 8px 18px;
-  font-size: 24px;
+  padding: 6px 16px;
+  font-size: 19px;
   font-weight: 700;
 }
 
@@ -70,8 +70,8 @@ button, select { font: inherit; }
   background: rgba(240, 240, 240, 0.95);
   border: 1px solid #555;
   border-radius: 18px;
-  padding: 5px 12px;
-  font-size: 14px;
+  padding: 4px 10px;
+  font-size: 11px;
 }
 
 .chip-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 3px; }
@@ -79,7 +79,8 @@ button, select { font: inherit; }
   border: 1px solid #3c3c3c;
   border-radius: 20px;
   background: #e3e3e3;
-  padding: 10px 14px;
+  padding: 8px 13px;
+  font-size: 12px;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -87,7 +88,7 @@ button, select { font: inherit; }
 .listing-container {
   background: #d3d3d3;
   border-radius: 12px;
-  padding: 12px 8px;
+  padding: 10px 8px;
 }
 .listing-head {
   display: flex;
@@ -95,8 +96,8 @@ button, select { font: inherit; }
   align-items: center;
   margin-bottom: 8px;
 }
-.listing-head h2 { margin: 0; font-size: 44px; }
-.listing-head button { border: none; background: transparent; font-size: 24px; cursor: pointer; }
+.listing-head h2 { margin: 0; font-size: 17px; }
+.listing-head button { border: none; background: transparent; font-size: 16px; cursor: pointer; color: #303030; }
 
 .listing-card {
   width: 100%;
@@ -105,10 +106,10 @@ button, select { font: inherit; }
   border: 1.3px solid #242424;
   background: #14d0c0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
-  padding: 10px;
+  padding: 8px;
   display: grid;
-  grid-template-columns: 38% 1fr auto;
-  gap: 10px;
+  grid-template-columns: 150px 1fr auto;
+  gap: 12px;
   text-align: left;
   cursor: pointer;
 }
@@ -119,19 +120,26 @@ button, select { font: inherit; }
   border: 1px solid #333;
   object-fit: cover;
 }
-.listing-card h3 { margin: 3px 0 0; font-size: 44px; }
-.listing-card p { margin: 0; font-size: 34px; color: rgba(0, 0, 0, 0.72); }
+.listing-card h3 { margin: 3px 0 0; font-size: 18px; }
+.listing-card p { margin: 2px 0 0; font-size: 11px; color: rgba(0, 0, 0, 0.72); }
 .listing-card span {
   margin-top: 8px;
   display: inline-block;
-  border-radius: 12px;
-  background: #e9e9e9;
-  padding: 2px 9px;
-  font-size: 30px;
+  border-radius: 999px;
+  background: #dfebdf;
+  padding: 2px 8px;
+  font-size: 11px;
+}
+.listing-card span b {
+  background: #2f7b1f;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-right: 4px;
 }
 .price-col { text-align: right; align-self: center; }
-.price-col strong { display: block; font-size: 50px; line-height: 1.1; }
-.price-col small { font-size: 34px; }
+.price-col strong { display: block; font-size: 41px; line-height: 1.05; }
+.price-col small { font-size: 11px; }
 
 .ticket-gallery {
   border: 1.5px solid #242424;
@@ -142,23 +150,23 @@ button, select { font: inherit; }
   gap: 2px;
 }
 .ticket-gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ticket-gallery > div { display: grid; grid-template-rows: 1fr 76px; }
+.ticket-gallery > div { display: grid; grid-template-rows: 1fr 52px; }
 .view-all {
   border: 1px solid #3a2f07;
   background: linear-gradient(180deg, #f8d43e, #c4a30f);
-  font-size: 42px;
+  font-size: 18px;
   cursor: pointer;
 }
 
 .detail-copy { padding: 4px 4px 0; }
-.detail-copy h2 { margin: 0; font-size: 46px; }
-.detail-copy p { margin: 4px 0; font-size: 36px; }
-.detail-copy .price-row { font-size: 56px; font-weight: 700; }
-.detail-copy .price-row span { font-size: 40px; font-weight: 500; }
-.detail-copy .sub, .detail-copy small { color: rgba(0,0,0,.65); font-size: 30px; }
-.detail-copy h3 { font-size: 52px; margin: 6px 0; }
+.detail-copy h2 { margin: 0; font-size: 23px; }
+.detail-copy p { margin: 4px 0; font-size: 16px; }
+.detail-copy .price-row { font-size: 27px; font-weight: 700; }
+.detail-copy .price-row span { font-size: 18px; font-weight: 500; }
+.detail-copy .sub, .detail-copy small { color: rgba(0,0,0,.65); font-size: 13px; }
+.detail-copy h3 { font-size: 22px; margin: 6px 0; }
 .detail-copy .market { display: flex; justify-content: space-between; align-items: center; }
-.detail-copy .market strong { font-size: 66px; color: #2456a5; }
+.detail-copy .market strong { font-size: 32px; color: #2456a5; }
 .detail-copy .market small { display: block; max-width: 220px; }
 .line { border-top: 1px solid rgba(0, 0, 0, 0.25); margin: 8px 0; }
 .spacer { min-height: 54px; }
@@ -169,20 +177,20 @@ button, select { font: inherit; }
   background: #f4f4f4;
   border: 1.3px solid #282828;
   border-radius: 24px;
-  padding: 12px 20px;
+  padding: 10px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0,0,0,.2);
-  font-size: 44px;
+  font-size: 16px;
 }
 .field-row select {
   border-radius: 16px;
   border: 1px solid #3a3a3a;
   padding: 4px 10px;
-  font-size: 30px;
+  font-size: 14px;
 }
-.checkbox-row input { width: 26px; height: 26px; }
+.checkbox-row input { width: 20px; height: 20px; }
 
 .pay-grid { display: flex; gap: 8px; }
 .pay-grid button {
@@ -190,8 +198,8 @@ button, select { font: inherit; }
   border-radius: 14px;
   border: 1.3px solid #333;
   background: #e7e7e7;
-  min-height: 66px;
-  font-size: 32px;
+  min-height: 48px;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -201,8 +209,8 @@ button, select { font: inherit; }
   border-radius: 26px;
   border: 1.3px solid #2f2f2f;
   background: #12ff00;
-  min-height: 58px;
-  font-size: 42px;
+  min-height: 44px;
+  font-size: 18px;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
 }
@@ -225,8 +233,13 @@ button, select { font: inherit; }
   width: min(430px, 100vw);
   bottom: 0;
   padding: 10px;
+  z-index: 20;
 }
 .nav-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   border: 1.5px solid #303030;
   border-radius: 20px;
   background: linear-gradient(180deg, #19d3c4, #dcecec);
@@ -237,7 +250,7 @@ button, select { font: inherit; }
   border-radius: 50%;
   border: none;
   background: #efefef;
-  font-size: 34px;
+  font-size: 22px;
   aspect-ratio: 1;
   cursor: pointer;
 }
@@ -247,11 +260,16 @@ button, select { font: inherit; }
   height: 5px;
   border-radius: 6px;
   background: #090909;
-  margin: 9px auto 0;
+  margin: 10px auto 0;
+  flex-basis: 100%;
 }
 
 @media (max-width: 500px) {
-  .status-bar { font-size: 26px; }
-  .listing-head h2 { font-size: 42px; }
-  .listing-card h3 { font-size: 41px; }
+  .listing-card {
+    grid-template-columns: 124px 1fr auto;
+    gap: 10px;
+  }
+
+  .listing-card h3 { font-size: 16px; }
+  .price-col strong { font-size: 18px; }
 }
